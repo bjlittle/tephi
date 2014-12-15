@@ -312,7 +312,10 @@ class Hodograph(object):
             self.ticklabels(angle, **kwargs)
 
     def ticklabels(self, angle, **kwargs):
-        self.axes.set_rlabel_position(angle)
+# XXX v1.4.0 only
+#        self.axes.set_rlabel_position(angle)
+        self.axes._r_label_position._t = (angle, 0.0)
+        self.axes._r_label_position.invalidate()
         if 'zorder' not in kwargs:
             kwargs['zorder'] = default.get('isopleth_zorder', 10) + 2
         for i, tick in enumerate(self.axes.yaxis.get_ticklabels()):

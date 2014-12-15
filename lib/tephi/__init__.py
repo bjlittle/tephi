@@ -400,8 +400,10 @@ class TephiAxes(Subplot):
         # Show the plot legend.
         if 'label' in kwargs:
             font_properties = FontProperties(size='x-small')
-            plt.legend(loc='upper right', fancybox=True, shadow=True,
-                       prop=font_properties)
+            loc = default.get('legend_loc', 'upper right')
+            legend  = plt.legend(loc=loc, fancybox=True,
+                                 shadow=True, prop=font_properties)
+            legend.set_zorder(default.get('legend_zorder', 20))
 
         return profile
 

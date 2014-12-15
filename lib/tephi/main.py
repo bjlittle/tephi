@@ -4,30 +4,26 @@ import numpy as np
 from tephi import TephiAxes
 
 
-#    plt.ion()
 ax = TephiAxes(anchor=[(0, -10), (0, 100)])
-#    ax = TephiAxes()
 
-data = [[1006, 26.4], [924, 20.3], [900, 19.8], [850, 14.5], [800, 12.9],
-        [755, 8.3], [710, -5], [700, -5.1], [600, -11.2], [500, -8.3],
-        [470, -12.1], [459, -12.5], [400, -32.9], [300, -46], [250, -53]]
-profile = ax.plot(data)
-barbs = [barb for barb in zip(np.linspace(0, 100, len(data)),
-                              np.linspace(0, 360, len(data)),
-                              np.asarray(data)[:, 0])]
-profile.barbs(barbs, hodograph=True)
+dew = [[1006, 26.4], [924, 20.3], [900, 19.8], [850, 14.5], [800, 12.9],
+       [755, 8.3], [710, -5], [700, -5.1], [600, -11.2], [500, -8.3],
+       [470, -12.1], [459, -12.5], [400, -32.9], [300, -46], [250, -53]]
+dew_profile = ax.plot(dew, color='blue', linewidth=2, linestyle='--',
+                      label='Dew-point')
 
-#    da = isopleths.DryAdiabat(ax, 50, 700, 1000)
-#    da.plot()
+dry = [[1006.0, 30.0], [924.0, 22.0], [900.0, 21.0], [850.0, 18.0],
+       [800.0, 16.0], [755.0, 12.0], [710.0, 12.0], [700.0, 11.0],
+       [600.0, 4.0], [500.0, -4.0], [470.0, -7.0], [459.0, -7.0],
+       [400.0, -13.0], [300.0, -29.0], [250.0, -38.0]]
+dry_profile = ax.plot(dry, color='green', linewidth=2,
+                      label='Dry-bulb')
 
-#    isotherm = isopleths.Isotherm(ax, 5, 700, 1000)
-#    isotherm.plot()
+barbs = [barb for barb in zip(np.linspace(0, 100, len(dry)),
+                              np.linspace(0, 360, len(dry)),
+                              np.asarray(dry)[:, 0])]
 
-#    hmr = isopleths.HumidityMixingRatio(ax, 10, 700, 1000)
-#    hmr.plot()
-
-#    wa = isopleths.WetAdiabat(ax, 0, -40, 1000)
-#    wa.plot()
+dry_profile.barbs(barbs, hodograph=True)
 
 ax.add_isobars()
 ax.add_wet_adiabats()
