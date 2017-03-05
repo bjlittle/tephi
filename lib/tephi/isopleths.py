@@ -171,7 +171,12 @@ def _SALR_gradient(min_temperature, pressure, temperature, dp):
 
 
 def _find_SALR(max_pressure, point, lower_theta, upper_theta):
-    # return in monotonically increasing order as np arrays
+    """
+    Perform a binary search to find the SALR that extends from the
+    maximum pressure to the target point, but within the bounded limits
+    of the lower and upper theta potential temperatures.
+    
+    """
     mid_theta = lower_theta + (upper_theta - lower_theta) / 2.
 
     _, target_temperature = transforms.convert_pt2pT([max_pressure], [mid_theta])
@@ -200,7 +205,10 @@ def _find_SALR(max_pressure, point, lower_theta, upper_theta):
 
 
 def _get_SALR(max_pressure, point):
-
+    """
+    Discover the SALR extending from maximum pressure to target point.
+    
+    """
     _, lower_theta = transforms.convert_pT2Tt([max_pressure], [point.temperature])
     lower_theta = lower_theta[0]
     upper_theta = point.theta
@@ -248,6 +256,7 @@ def wet_adiabat(max_pressure, min_temperature, axes,
     stop = False
     dp = -5.0
 
+    # Generate SALR from base pressure to minimum temperature.
     while not stop:
         dp, dt, stop = _SALR_gradient(min_temperature, pressures[-1], temperatures[-1], dp)
         pressures.append(pressures[-1] + dp)
@@ -256,11 +265,13 @@ def wet_adiabat(max_pressure, min_temperature, axes,
     _, thetas = transforms.convert_pT2Tt(pressures, temperatures)
 
     if max_pressure > base:
+        # Generate SALR extension from maximum pressure to base pressure.
         target = POINT(temperature, thetas[0], base)
         salr = _get_SALR(max_pressure, target)
         temperatures = np.concatenate((salr.temperature, temperatures))
         thetas = np.concatenate((salr.theta, thetas))
     elif max_pressure < base:
+        # Clip the SALR from base pressure to maximum pressure.
         pressures = np.asarray(pressures)
         temperatures = np.asarray(temperatures)
         func = interp1d(pressures, temperatures)
@@ -274,7 +285,7 @@ def wet_adiabat(max_pressure, min_temperature, axes,
             _, max_theta = transforms.convert_pT2Tt(max_pressure, max_temperature)
             thetas = np.insert(thetas, 0, max_theta)
 
-    line, = axes.plot(temperatures, thetas, transform=transform, **kwargs)
+    [line] = axes.plot(temperatures, thetas, transform=transform, **kwargs)
 
     return line
 
