@@ -1,4 +1,4 @@
-# (C) British Crown Copyright 2014 - 2015, Met Office
+# (C) British Crown Copyright 2014 - 2017, Met Office
 #
 # This file is part of tephi.
 #
@@ -17,12 +17,31 @@
 """Tephigram transform and isopleth constants."""
 from __future__ import absolute_import, division, print_function
 
-# TODO: Discover the meaning of the magic constant numbers.
 
-CONST_CP = 1.01e3
-CONST_K = 0.286
-CONST_KELVIN = 273.15  # celsius to kelvin offset.
-CONST_L = 2.5e6
-CONST_MA = 300.0
-CONST_RD = 287.0
-CONST_RV = 461.0
+# The specific heat capacity of dry air at a constant pressure,
+# in units of J kg-1 K-1.
+Cp = 1004.0
+
+# Conversion offset between degree Celsius and Kelvin.
+KELVIN = 273.15  # CONST_KELVEN
+
+# The specific latent heat of vapourisation of water at 0 degC,
+# in units of J kg-1.
+L = 2.501e6  # CONST_L
+
+MA = 300.0  # CONST_MA
+
+# The specific gas constant for dry air, in units of J kg-1 K-1.
+Rd = 287.0  # CONST_RD
+
+# The specific gas constant for water vapour, in units of J kg-1 K-1.
+Rv = 461.0  # CONST_RV
+
+# Dimensionless ratio: Rd / Cp
+K = Rd / Cp
+
+# Dimensionless ratio: Rd / Rv.
+E = Rd / Rv
+
+# Base surface pressure.
+P_BASE = 1000.0

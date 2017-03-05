@@ -1,4 +1,4 @@
-# (C) British Crown Copyright 2014 - 2015, Met Office
+# (C) British Crown Copyright 2014 - 2017, Met Office
 #
 # This file is part of tephi.
 #
@@ -731,8 +731,8 @@ class Tephigram(object):
     def _status_bar(self, x_point, y_point):
         """Generate text for the interactive backend navigation status bar."""
 
-        temperature, theta = transforms.xy_to_temperature_theta(x_point, y_point)
-        pressure, _ = transforms.temperature_theta_to_pressure_temperature(temperature, theta)
+        temperature, theta = transforms.convert_xy2Tt(x_point, y_point)
+        pressure, _ = transforms.convert_Tt2pT(temperature, theta)
         xlim = self.axes.get_xlim()
         zoom = (xlim[1] - xlim[0]) / self.original_delta_xlim
         text = "T:%.2f, theta:%.2f, phi:%.2f (zoom:%.3f)" % (float(temperature), float(theta), float(pressure), zoom)

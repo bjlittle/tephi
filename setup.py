@@ -6,7 +6,7 @@ setup(
     version='0.2.0-alpha',
     url='https://github.com/SciTools/tephi',
     author='Bill Little',
-    author_email='bill.james.little@gmail.com',
+    author_email='bjlittle.pub@gmail.com',
     packages=['tephi', 'tephi.tests'],
     package_dir={'': 'lib'},
     package_data={'tephi': ['etc/test_data/*.txt'] + ['etc/test_results/*.pkl']},

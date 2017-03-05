@@ -1,4 +1,4 @@
-# (C) British Crown Copyright 2014 - 2015, Met Office
+# (C) British Crown Copyright 2014 - 2017, Met Office
 #
 # This file is part of tephi.
 #
@@ -21,7 +21,9 @@ environment profiles and barbs.
 """
 from __future__ import absolute_import, division, print_function
 
+from collections import namedtuple
 import math
+
 from matplotlib.collections import PathCollection
 import matplotlib.pyplot as plt
 import matplotlib.transforms as mtransforms
@@ -29,19 +31,17 @@ from matplotlib.path import Path
 import numpy as np
 from scipy.interpolate import interp1d
 
-from ._constants import CONST_CP, CONST_L, CONST_KELVIN, CONST_RD, CONST_RV
+from . import constants
 from . import transforms
 
+
+POINT = namedtuple('Point', 'temperature theta pressure')
 
 # Wind barb speed (knots) ranges used since 1 January 1955.
 _BARB_BINS = np.arange(20) * 5 + 3
 _BARB_GUTTER = 0.1
 _BARB_DTYPE = np.dtype(dict(names=('speed', 'angle', 'pressure', 'barb'),
                             formats=('f4', 'f4', 'f4', np.object)))
-
-#
-# Reference: http://www-nwp/~hadaa/tephigram/tephi_plot.html
-#
 
 
 def mixing_ratio(min_pressure, max_pressure, axes,
@@ -79,10 +79,8 @@ def mixing_ratio(min_pressure, max_pressure, axes,
 
     """
     pressures = np.linspace(min_pressure, max_pressure, 100)
-    temps = transforms.pressure_mixing_ratio_to_temperature(pressures,
-                                                            mixing_ratio_value)
-    _, thetas = transforms.pressure_temperature_to_temperature_theta(pressures,
-                                                                     temps)
+    temps = transforms.convert_pw2T(pressures, mixing_ratio_value)
+    _, thetas = transforms.convert_pT2Tt(pressures, temps)
     line, = axes.plot(temps, thetas, transform=transform, **kwargs)
 
     return line
@@ -121,13 +119,13 @@ def isobar(min_theta, max_theta, axes, transform, kwargs, pressure):
     """
     steps = 100
     thetas = np.linspace(min_theta, max_theta, steps)
-    _, temps = transforms.pressure_theta_to_pressure_temperature([pressure] * steps, thetas)
+    _, temps = transforms.convert_pt2pT([pressure] * steps, thetas)
     line, = axes.plot(temps, thetas, transform=transform, **kwargs)
 
     return line
 
 
-def _wet_adiabat_gradient(min_temperature, pressure, temperature, dp):
+def _SALR_gradient(min_temperature, pressure, temperature, dp):
     """
     Calculate the wet adiabat change in pressure and temperature.
 
@@ -149,26 +147,65 @@ def _wet_adiabat_gradient(min_temperature, pressure, temperature, dp):
         the gradient difference.
 
     Returns:
-        The gradient change as a pressure, potential temperature value pair.
+        The gradient change as a pressure, potential temperature value pair and
+        whether the target min_temperature has been reached.
 
     """
+    stop = False
 
-    # TODO: Discover the meaning of the magic numbers.
-
-    kelvin = temperature + CONST_KELVIN
-    lsbc = (CONST_L / CONST_RV) * ((1.0 / CONST_KELVIN) - (1.0 / kelvin))
-    rw = 6.11 * np.exp(lsbc) * (0.622 / pressure)
-    lrwbt = (CONST_L * rw) / (CONST_RD * kelvin)
-    nume = ((CONST_RD * kelvin) / (CONST_CP * pressure)) * (1.0 + lrwbt)
-    deno = 1.0 + (lrwbt * ((0.622 * CONST_L) / (CONST_CP * kelvin)))
+    kelvin = temperature + constants.KELVIN
+    lsbc = (constants.L / constants.Rv) * ((1.0 / constants.KELVIN) - (1.0 / kelvin))
+    rw = 6.11 * np.exp(lsbc) * (constants.E / pressure)
+    lrwbt = (constants.L * rw) / (constants.Rd * kelvin)
+    nume = ((constants.Rd * kelvin) / (constants.Cp * pressure)) * (1.0 + lrwbt)
+    deno = 1.0 + (lrwbt * ((constants.E * constants.L) / (constants.Cp * kelvin)))
     gradi = nume / deno
     dt = dp * gradi
 
     if (temperature + dt) < min_temperature:
         dt = min_temperature - temperature
         dp = dt / gradi
+        stop = True
 
-    return dp, dt
+    return dp, dt, stop
+
+
+def _find_SALR(max_pressure, point, lower_theta, upper_theta):
+    # return in monotonically increasing order as np arrays
+    mid_theta = lower_theta + (upper_theta - lower_theta) / 2.
+
+    _, target_temperature = transforms.convert_pt2pT([max_pressure], [mid_theta])
+    temperatures = [target_temperature[0]]
+    pressures = [max_pressure]
+    dp = -5.0
+    stop = False
+
+    while not stop:
+        dp, dt, stop = _SALR_gradient(point.temperature, pressures[-1], temperatures[-1], dp)
+        pressures.append(pressures[-1] + dp)
+        temperatures.append(temperatures[-1] + dt)
+
+    _, thetas = transforms.convert_pT2Tt(pressures, temperatures)
+
+    if np.allclose(thetas[-1:], [point.theta]):
+        result = POINT(np.asarray(temperatures),
+                       np.asarray(thetas),
+                       np.asarray(pressures))
+    elif thetas[-1] < point.theta:
+        result = _find_SALR(max_pressure, point, mid_theta, upper_theta)
+    else:
+        result = _find_SALR(max_pressure, point, lower_theta, mid_theta)
+
+    return result
+
+
+def _get_SALR(max_pressure, point):
+
+    _, lower_theta = transforms.convert_pT2Tt([max_pressure], [point.temperature])
+    lower_theta = lower_theta[0]
+    upper_theta = point.theta
+
+    return _find_SALR(max_pressure, point, lower_theta, upper_theta)
 
 
 def wet_adiabat(max_pressure, min_temperature, axes,
@@ -205,19 +242,39 @@ def wet_adiabat(max_pressure, min_temperature, axes,
         The wet adiabat :class:`matplotlib.lines.Line2D` instance.
 
     """
-    temps = [temperature]
-    pressures = [max_pressure]
+    base = constants.P_BASE
+    pressures = [base]
+    temperatures = [temperature]
+    stop = False
     dp = -5.0
 
-    for i in range(200):
-        dp, dt = _wet_adiabat_gradient(min_temperature, pressures[i],
-                                       temps[i], dp)
-        temps.append(temps[i] + dt)
-        pressures.append(pressures[i] + dp)
+    while not stop:
+        dp, dt, stop = _SALR_gradient(min_temperature, pressures[-1], temperatures[-1], dp)
+        pressures.append(pressures[-1] + dp)
+        temperatures.append(temperatures[-1] + dt)
 
-    _, thetas = transforms.pressure_temperature_to_temperature_theta(pressures,
-                                                                     temps)
-    line, = axes.plot(temps, thetas, transform=transform, **kwargs)
+    _, thetas = transforms.convert_pT2Tt(pressures, temperatures)
+
+    if max_pressure > base:
+        target = POINT(temperature, thetas[0], base)
+        salr = _get_SALR(max_pressure, target)
+        temperatures = np.concatenate((salr.temperature, temperatures))
+        thetas = np.concatenate((salr.theta, thetas))
+    elif max_pressure < base:
+        pressures = np.asarray(pressures)
+        temperatures = np.asarray(temperatures)
+        func = interp1d(pressures, temperatures)
+        max_temperature = func(max_pressure)[()]
+        index = np.where(pressures <= max_pressure)[0]
+        pressures = pressures[index]
+        temperatures = temperatures[index]
+        thetas = thetas[index]
+        if pressures[0] != max_pressure:
+            temperatures = np.insert(temperatures, 0, max_temperature)
+            _, max_theta = transforms.convert_pT2Tt(max_pressure, max_temperature)
+            thetas = np.insert(thetas, 0, max_theta)
+
+    line, = axes.plot(temperatures, thetas, transform=transform, **kwargs)
 
     return line
 
@@ -318,14 +375,13 @@ class Barbs(object):
             x = np.ones(y.size) * (xlim[1] - (xdelta * self._gutter))
             points = self.axes.tephigram_inverse.transform(np.column_stack((x, y)))
             temperature, theta = points[:, 0], points[:, 1]
-            pressure, _ = transforms.temperature_theta_to_pressure_temperature(temperature,
-                                                                               theta)
+            pressure, _ = transforms.convert_Tt2pT(temperature, theta)
             min_pressure, max_pressure = np.min(pressure), np.max(pressure)
             func = interp1d(pressure, temperature)
             for i, (speed, angle, pressure, barb) in enumerate(self.barbs):
                 if min_pressure < pressure < max_pressure:
-                    temperature, theta = transforms.pressure_temperature_to_temperature_theta(pressure,
-                                                                                              func(pressure))
+                    temperature, theta = transforms.convert_pT2Tt(pressure,
+                                                                  func(pressure))
                     if barb is None:
                         self.barbs[i]['barb'] = self._make_barb(temperature, theta, speed, angle)
                     else:
@@ -403,8 +459,8 @@ class Profile(object):
         self._transform = axes.tephigram_transform + axes.transData
         self.pressure = self.data[:, 0]
         self.temperature = self.data[:, 1]
-        _, self.theta = transforms.pressure_temperature_to_temperature_theta(self.pressure,
-                                                                             self.temperature)
+        _, self.theta = transforms.convert_pT2Tt(self.pressure,
+                                                 self.temperature)
         self.line = None
         self._barbs = Barbs(axes)
 
