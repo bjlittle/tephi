@@ -648,26 +648,26 @@ class Tephigram:
             locator_theta = dry_adiabat_locator
 
         # Define the tephigram coordinate-system transformation.
-        self.tephi_transform = transforms.TephiTransform()
+        self.tephi_transform = transforms.NoTransform()
         ghelper = GridHelperCurveLinear(
             self.tephi_transform,
-            tick_formatter1=_FormatterIsotherm(),
+            tick_formatter1=None, #_FormatterIsotherm(),
             grid_locator1=locator_isotherm,
-            tick_formatter2=_FormatterTheta(),
+            tick_formatter2=None, #_FormatterTheta(),
             grid_locator2=locator_theta,
         )
         self.axes = Subplot(self.figure, 1, 1, 1, grid_helper=ghelper)
         self.transform = self.tephi_transform + self.axes.transData
         self.axes.axis["isotherm"] = self.axes.new_floating_axis(1, 0)
         self.axes.axis["theta"] = self.axes.new_floating_axis(0, 0)
-        self.axes.axis["left"].get_helper().nth_coord_ticks = 0
+        self.axes.axis["left"].get_helper().nth_coord_ticks = 1
         self.axes.axis["left"].toggle(all=True)
-        self.axes.axis["bottom"].get_helper().nth_coord_ticks = 1
+        self.axes.axis["bottom"].get_helper().nth_coord_ticks = 0
         self.axes.axis["bottom"].toggle(all=True)
         self.axes.axis["top"].get_helper().nth_coord_ticks = 0
         self.axes.axis["top"].toggle(all=False)
         self.axes.axis["right"].get_helper().nth_coord_ticks = 1
-        self.axes.axis["right"].toggle(all=True)
+        self.axes.axis["right"].toggle(all=False)
         self.axes.gridlines.set_linestyle("solid")
 
         self.figure.add_subplot(self.axes)
@@ -676,17 +676,19 @@ class Tephigram:
         axis = self.axes.axis["left"]
         axis.major_ticklabels.set_fontsize(10)
         axis.major_ticklabels.set_va("baseline")
-        axis.major_ticklabels.set_rotation(135)
+        #axis.major_ticklabels.set_rotation(135)
+        axis.set_label("Potential Temperature / (" + r"$\circ$" + "C)")
         axis = self.axes.axis["right"]
         axis.major_ticklabels.set_fontsize(10)
         axis.major_ticklabels.set_va("baseline")
-        axis.major_ticklabels.set_rotation(-135)
+        #axis.major_ticklabels.set_rotation(-135)
         self.axes.axis["top"].major_ticklabels.set_fontsize(10)
         axis = self.axes.axis["bottom"]
         axis.major_ticklabels.set_fontsize(10)
         axis.major_ticklabels.set_ha("left")
         axis.major_ticklabels.set_va("top")
-        axis.major_ticklabels.set_rotation(-45)
+        #axis.major_ticklabels.set_rotation(-45)
+        axis.set_label("Temperature / (" + r"$\circ$" + "C)")
 
         # Isotherms: lines of constant temperature (degC).
         axis = self.axes.axis["isotherm"]
@@ -706,8 +708,9 @@ class Tephigram:
         axis.major_ticklabels.set_va("bottom")
         axis.major_ticklabels.set_color("grey")
         axis.major_ticklabels.set_visible(False)  # turned-off
-        axis.line.set_linewidth(3)
-        axis.line.set_linestyle("--")
+#        axis.line.set_linewidth(3)
+#        axis.line.set_linestyle("--")
+        import pdb; pdb.set_trace()
 
         # Lock down the aspect ratio.
         self.axes.set_aspect(1.0)

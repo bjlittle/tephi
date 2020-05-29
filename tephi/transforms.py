@@ -254,3 +254,65 @@ class TephiTransformInverted(Transform):
     def inverted(self):
         """Return the inverse transformation."""
         return TephiTransform()
+
+
+
+class NoTransform(Transform):
+    """
+    Tephigram transformation to convert from temperature and
+    potential temperature to native plotting device coordinates.
+
+    """
+
+    input_dims = 2
+    output_dims = 2
+    is_separable = False
+    has_inverse = True
+
+    def transform_non_affine(self, values):
+        """
+        Transform from tephigram temperature and potential temperature
+        to native plotting device coordinates.
+
+        Args:
+
+        * values:
+            Values to be transformed, with shape (N, 2).
+
+        """
+        return np.concatenate((values[:, 0:1], values[:, 1:2]), axis=1)
+
+    def inverted(self):
+        """Return the inverse transformation."""
+        return NoTransformInverted()
+
+
+class NoTransformInverted(Transform):
+    """
+    Tephigram inverse transformation to convert from native
+    plotting device coordinates to tephigram temperature and
+    potential temperature.
+
+    """
+
+    input_dims = 2
+    output_dims = 2
+    is_separable = False
+    has_inverse = True
+
+    def transform_non_affine(self, values):
+        """
+        Transform from native plotting display coordinates to tephigram
+        temperature and potential temperature.
+
+        Args:
+
+        * values:
+           Values to be transformed, with shape (N, 2).
+
+        """
+        return np.concatenate((values[:, 0:1], values[:, 1:2]), axis=1)
+
+    def inverted(self):
+        """Return the inverse transformation."""
+        return NoTransform()
