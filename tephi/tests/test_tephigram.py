@@ -15,7 +15,7 @@ import numpy as np
 import pytest
 
 import tephi
-from tephi import Tephigram
+from tephi import FormatterDryAdiabat, FormatterIsotherm, Tephigram
 
 
 def _load_result(filename):
@@ -27,6 +27,32 @@ def _load_result(filename):
 _expected_dews = _load_result("dews.npz")
 _expected_temps = _load_result("temps.npz")
 _expected_barbs = _load_result("barbs.npz")
+
+
+class TestFormatters(tests.TephiTest):
+    def test_dry_adiabat__int(self):
+        fmt = FormatterDryAdiabat()
+        result = fmt(None, None, [1, 2, 3])
+        expected = ["$\\theta=1$", "$\\theta=2$", "$\\theta=3$"]
+        assert expected == result
+
+    def test_dry_adiabat__float(self):
+        fmt = FormatterDryAdiabat()
+        result = fmt(None, None, [1.0, 2.0, 3.0])
+        expected = ["$\\theta=1$", "$\\theta=2$", "$\\theta=3$"]
+        assert expected == result
+
+    def test_isotherm__int(self):
+        fmt = FormatterIsotherm()
+        result = fmt(None, None, [1, 2, 3])
+        expected = ["  $T=1$", "  $T=2$", "  $T=3$"]
+        assert expected == result
+
+    def test_isotherm__float(self):
+        fmt = FormatterIsotherm()
+        result = fmt(None, None, [1.0, 2.0, 3.0])
+        expected = ["  $T=1$", "  $T=2$", "  $T=3$"]
+        assert expected == result
 
 
 class TestTephigramLoadTxt(tests.TephiTest):

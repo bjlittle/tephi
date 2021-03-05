@@ -4,6 +4,17 @@ build:
   image: latest
 
 conda:
-  environment: ci/requirements/rtd.yml
+  environment: requirements/ci/readthedocs.yml
 
-formats: []
+sphinx:
+  configuration: docs/tephi/src/conf.py
+  fail_on_warning: false
+
+python:
+  install:
+    - method: setuptools
+      path: .
+
+formats:
+  - htmlzip
+  - pdf

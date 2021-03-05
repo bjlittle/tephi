@@ -13,6 +13,11 @@ from sphinx.util.docstrings import prepare_docstring
 import inspect
 
 
+# stop warnings cluttering the make output
+import warnings
+warnings.filterwarnings("ignore")
+
+
 class ClassWithConstructorDocumenter(autodoc.ClassDocumenter):
     priority = 1000000
 
@@ -81,4 +86,4 @@ class ClassWithConstructorDocumenter(autodoc.ClassDocumenter):
 
 
 def setup(app):
-    app.add_autodocumenter(ClassWithConstructorDocumenter)
+    app.add_autodocumenter(ClassWithConstructorDocumenter, override=True)

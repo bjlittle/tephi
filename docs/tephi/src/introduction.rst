@@ -19,7 +19,7 @@ The axes and lines of the tephigram are shown in :ref:`tephi_axes`.
    *Figure 1: The tephigram.*
 
 
-Axes and lines of the tephigram
+Axes and Lines of the Tephigram
 -------------------------------
 
 At first glance the tephigram appears to be a confusing mass of lines. However, on closer inspection *five* different types of lines can be identified, all of which are now described.
@@ -46,7 +46,7 @@ The axis ticks to the left of the plot show the temperature values of each indiv
 
 .. _intro-dry-adiabat:
 
-Dry adiabats
+Dry Adiabats
 ^^^^^^^^^^^^
 
 Dry adiabats are lines of constant potential temperature, measured in units of :sup:`o`\ C. They are straight and parallel, running at 45\ :sup:`o`\  across the tephigram from the top left to the bottom right of the plot.
@@ -96,7 +96,7 @@ The value of each individual isobar line is always shown *within* the plot besid
 
 .. _intro-humidity-mixing-ratio:
 
-Humidity mixing ratio
+Humidity Mixing Ratio
 ^^^^^^^^^^^^^^^^^^^^^
 
 Humidity mixing ratio lines are lines of constant saturation mixing ratio with respect to a plane water surface, measured in units of g kg\ :sup:`-1`\ . They run diagonally across the plot from bottom left to top right.
@@ -116,7 +116,7 @@ The value of each humidity mixing ratio line is always shown *within* the plot b
 
 .. _intro-saturated-adiabat:
 
-Pseudo saturated wet adiabats
+Pseudo Saturated Wet Adiabats
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Saturated adiabats are lines of constant equivalent potential temperature for saturated air parcels, measured in units :sup:`o`\ C. They run as vertically curved lines across the plot from top to bottom.

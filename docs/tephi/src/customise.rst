@@ -1,6 +1,6 @@
 .. tephigram_user_guide_customise:
 
-Tephigram customisation
+Tephigram Customisation
 =======================
 
 This section discusses how finer control of the tephigram isobars, saturated adiabats and humidity mixing ratio lines and text can be achieved.
@@ -11,10 +11,10 @@ This section discusses how finer control of the tephigram isobars, saturated adi
    from pprint import pprint
 
 
-Isobar control
+Isobar Control
 --------------
 
-Isobar lines
+Isobar Lines
 ^^^^^^^^^^^^
 
 The default behaviour of the tephigram *isobar line* is controlled by the :data:`tephi.ISOBAR_LINE` dictionary:
@@ -49,7 +49,7 @@ Updating the ``ISOBAR_LINE`` dictionary will subsequently change the default beh
    tephi.ISOBAR_LINE = {'color': 'blue', 'linewidth': 0.5, 'clip_on': True}
 
 
-Isobar text
+Isobar Text
 ^^^^^^^^^^^
 
 Similarly, the default behaviour of the tephigram *isobar text* is controlled by the :data:`tephi.ISOBAR_TEXT` dictionary:
@@ -89,7 +89,7 @@ Updating the ``ISOBAR_TEXT`` dictionary will change the default behaviour of how
    tephi.ISOBAR_TEXT = {'color': 'blue', 'va': 'bottom', 'ha': 'right', 'clip_on': True, 'size': 8}
 
 
-Isobar frequency
+Isobar Frequency
 ^^^^^^^^^^^^^^^^
 
 The *frequency* at which isobar lines are plotted on the tephigram is controlled by the :data:`tephi.ISOBAR_SPEC` list:
@@ -145,7 +145,7 @@ It is also possible to control which *individual* isobar lines should be *fixed*
 By default, the isobar lines at 50 mb and 1000 mb will **always** be plotted.
 
 
-Isobar line extent
+Isobar Line Extent
 ^^^^^^^^^^^^^^^^^^
 
 The extent of each tephigram *isobar line* is controlled by the :data:`tephi.MIN_THETA` and 
@@ -183,10 +183,10 @@ For example, to change the isobar line extent behaviour to be between 15 :sup:`o
    tephi.MAX_THETA = 250
 
 
-Saturated adiabat control
+Saturated Adiabat Control
 -------------------------
 
-Saturated adiabat lines
+Saturated Adiabat Lines
 ^^^^^^^^^^^^^^^^^^^^^^^
 
 The default behaviour of the tephigram *pseudo saturated wet adiabat line* is controlled by the :data:`tephi.WET_ADIABAT_LINE` dictionary:
@@ -221,7 +221,7 @@ Updating the ``WET_ADIABAT_LINE`` dictionary will change the default behaviour o
    tephi.WET_ADIABAT_LINE = {'color': 'orange', 'linewidth': 0.5, 'clip_on': True}
 
 
-Saturated adiabat text
+Saturated Adiabat Text
 ^^^^^^^^^^^^^^^^^^^^^^
 
 The default behavour of the tephigram *saturated adiabat text* is controlled by the :data:`tephi.WET_ADIABAT_TEXT` dictionary:
@@ -261,7 +261,7 @@ Updating the ``WET_ADIABAT_TEXT`` dictionary will change the default behaviour o
    tephi.WET_ADIABAT_TEXT = {'color': 'orange', 'va': 'bottom', 'ha': 'left', 'clip_on': True, 'size': 8}
 
 
-Saturated adiabat line frequency
+Saturated Adiabat Line Frequency
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The *frequency* at which saturated adiabat lines are plotted on the tephigram is controlled by the :data:`tephi.WET_ADIABAT_SPEC` list:
@@ -341,10 +341,10 @@ always to be plotted,
    tephi.WET_ADIABAT_FIXED = None
    
 
-Humidity mixing ratio control
+Humidity Mixing Ratio Control
 -----------------------------
 
-Humidity mixing ratio lines
+Humidity Mixing Ratio Lines
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The default behaviour of the tephigram *humidity mixing ratio line* is controlled by the :data:`tephi.MIXING_RATIO_LINE` dictionary:
@@ -379,7 +379,7 @@ Updating the ``MIXING_RATIO_LINE`` dictionary will change the default behaviour 
    tephi.MIXING_RATIO_LINE = {'color': 'green', 'linewidth': 0.5, 'clip_on': True}
 
 
-Humidity mixing ratio text
+Humidity Mixing Ratio Text
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The default behaviour of the tephigram *humidity mixing ratio text* is controlled by the :data:`tephi.MIXING_RATIO_TEXT` dictionary:
@@ -419,7 +419,7 @@ Updating the ``MIXING_RATIO_TEXT`` dictionary will change the default behaviour 
    tephi.MIXING_RATIO_TEXT = {'color': 'green', 'va': 'bottom', 'ha': 'right', 'clip_on': True, 'size': 8}
 
 
-Humidity mixing ratio line frequency
+Humidity Mixing Ratio Line Frequency
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The *frequency* at which humidity mixing ratio lines are plotted on the tephigram is controlled by the :data:`tephi.MIXING_RATIO_SPEC` list:

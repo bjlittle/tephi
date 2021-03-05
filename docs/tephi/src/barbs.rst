@@ -1,12 +1,12 @@
 .. tephigram_user_guide_barbs:
 
-Tephigram barbs
+Tephigram Barbs
 ===============
 
 This section discusses how wind barbs may be plotted on a tephigram.
 
 
-Wind barbs
+Wind Barbs
 ----------
 
 Tephigram plots may be decorated with barbs to indicate wind speed and wind direction at specific pressure levels. The following barb symbology has been adopted, as defined and used by the Met Office since 1 January 1955. See `Met Office National Meteorological Library and Archive, Fact Sheet No. 11 - Interpreting weather charts <http://www.metoffice.gov.uk/media/pdf/a/t/No._11_-_Weather_Charts.pdf#page=21>`_.
@@ -17,7 +17,7 @@ Tephigram plots may be decorated with barbs to indicate wind speed and wind dire
 Wind direction is indicated by the orientation of the barb on the plot, where north is 0\ :sup:`o`\ , east is 90\ :sup:`o`\ , south is 180\ :sup:`o`\ and west is 270\ :sup:`o`\ .
 
 
-Plotting barbs
+Plotting Barbs
 --------------
 
 A profile must be first plotted before the barbs are associated with that profile.
@@ -94,7 +94,7 @@ Barbs may also be plotted using wind speed and wind direction data (associated w
     profile.barbs(barbs)
     plt.show()
 
-Controlling the barbs
+Controlling the Barbs
 ---------------------
 
 All keyword arguments passed to :meth:`tephi.isopleths.Profile.barbs` are simply passed through to :func:`matplotlib.pyplot.barbs`.
@@ -124,7 +124,7 @@ This transparency allows full control when plotting barbs on the tephigram.
    plt.show()
 
 
-Moving the gutter
+Moving the Gutter
 -----------------
 
 By default, the barbs are plotted on the right hand side of the tephigram. The position of the barb gutter can easily be controlled via the :data:`gutter` keyword argument to :meth:`tephi.isopleths.Profile.barbs`.

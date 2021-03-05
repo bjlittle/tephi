@@ -1,6 +1,6 @@
 .. tephigram_user_guide_plotting:
 
-Tephigram plotting
+Tephigram Plotting
 ==================
 
 This section describes how to visualise one or more data sets as a tephigram.
@@ -15,7 +15,7 @@ This section describes how to visualise one or more data sets as a tephigram.
    dews, temps = tephi.loadtxt(dew_point, dry_bulb)
 
 
-Tephigram data
+Tephigram Data
 --------------
 
 Throughout this user guide we will make use of three data sets to plot temperature profiles on a tephigram.
@@ -83,14 +83,14 @@ Here it is used to load the third example data set that contains four columns of
    *FM 38-IX Ext. MOBIL* are currently **not** supported.
 
 
-Plotting tephigram data
+Plotting Tephigram Data
 -----------------------
 
 .. note::
    Tephigram *subplots* are currently **not** supported.
 
 
-Plotting a single data set
+Plotting a Single Data Set
 ^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 The temperature profile of a single tephigram data set can easily be plotted.
@@ -112,7 +112,7 @@ The temperature profile of a single tephigram data set can easily be plotted.
    plt.show()
 
 
-Plotting multiple data sets
+Plotting Multiple Data Sets
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 Plotting more than one data set is achieved by over-plotting each data set individually onto the tephigram.
@@ -141,7 +141,7 @@ Plotting more than one data set is achieved by over-plotting each data set indiv
 Note that, by default the tephigram will automatically center the plot so that all temperature profiles are visible, also see :ref:`plot-anchor`.
 
 
-Customising a temperature profile
+Customising a Temperature Profile
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
 All keyword arguments passed to :meth:`tephi.Tephigram.plot` are simply passed through to :func:`matplotlib.pyplot.plot`.
@@ -165,7 +165,7 @@ This transparency allows full control when plotting a temperature profile on the
    plt.show()
 
 
-Tephigram axis ticks
+Tephigram Axis Ticks
 ^^^^^^^^^^^^^^^^^^^^
 
 By default the *isotherm* and *dry adiabat* axis ticks are automatically located and scaled based on the tephigram plot and zoom level, which may be changed interactively.
@@ -195,7 +195,7 @@ The above may also be achieved without using a :class:`tephi.Locator`::
 
 .. _plot-anchor:
 
-Anchoring a plot
+Anchoring a Plot
 ^^^^^^^^^^^^^^^^
 
 By default, the tephigram will automatically center the plot around all temperature profiles. This behaviour may not be desirable

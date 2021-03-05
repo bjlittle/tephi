@@ -35,20 +35,45 @@ sys.path.append(os.path.abspath('sphinxext'))
 
 # Add any Sphinx extension module names here, as strings. They can be extensions
 # coming with Sphinx (named 'sphinx.ext.*') or your custom ones.
-extensions = ['sphinx.ext.autodoc',
+extensions = ['sphinx.ext.autosummary',
+              'sphinx.ext.autodoc',
               'sphinx.ext.coverage',
               'sphinx.ext.doctest',
               'sphinx.ext.imgmath',
               'sphinx.ext.intersphinx',
+              'sphinx.ext.napoleon',
+              'sphinx_copybutton',
               'matplotlib.sphinxext.mathmpl',
               'matplotlib.sphinxext.plot_directive',
               'custom_class_autodoc',
               'generate_package_rst',
-              'sphinx_copybutton',
               ]
 
-# List of packages to document
-autopackage_name = ['tephi']
+# -- Napoleon extension -------------------------------------------------------
+# See https://sphinxcontrib-napoleon.readthedocs.io/en/latest/sphinxcontrib.napoleon.html
+napoleon_google_docstring = True
+napoleon_numpy_docstring = True
+napoleon_include_init_with_doc = False
+napoleon_include_private_with_doc = False
+napoleon_include_special_with_doc = True  # includes dunders in api doc
+napoleon_use_admonition_for_examples = False
+napoleon_use_admonition_for_notes = False
+napoleon_use_admonition_for_references = False
+napoleon_use_ivar = False
+napoleon_use_param = True
+napoleon_use_rtype = True
+napoleon_use_keyword = True
+napoleon_custom_sections = None
+
+
+# api generation configuration
+autodoc_member_order = "groupwise"
+autodoc_default_flags = ["show-inheritance"]
+autosummary_generate = True
+autosummary_imported_members = True
+autopackage_name = ["tephi"]
+autoclass_content = "init"
+modindex_common_prefix = ["tephi"]
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -87,7 +112,7 @@ release = tephi.__version__
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
-exclude_patterns = ['sphinxext', 'build']
+exclude_patterns = []
 
 # The reST default role (used for this markup: `text`) to use for all documents.
 # default_role = None
@@ -266,9 +291,10 @@ texinfo_documents = [
 
 # Example configuration for intersphinx: refer to the Python standard library.
 intersphinx_mapping = {
-    'python': ('http://docs.python.org/3.8', None),
-    'numpy': ('http://docs.scipy.org/doc/numpy/', None),
-    'matplotlib': ('http://matplotlib.sourceforge.net/', None),
+    "matplotlib": ("https://matplotlib.org/stable/", None),
+    "numpy": ("https://numpy.org/doc/stable/", None),
+    "python": ("https://docs.python.org/3/", None),
+    "scipy": ("https://docs.scipy.org/doc/scipy/reference/", None),
 }
 
 # Define Python input prompt to copybutton.

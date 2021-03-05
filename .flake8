@@ -4,6 +4,8 @@
 #   https://flake8.readthedocs.io/en/latest/user/error-codes.html
 #   https://pycodestyle.readthedocs.io/en/latest/intro.html#error-codes
 
+max-line-length = 80
+select = C,E,F,W,B,B950
 ignore =
     # E203: whitespace before ':'
     E203,
@@ -15,6 +17,8 @@ ignore =
     E402,
     # E501: line too long
     E501,
+    # E731: do not assign a lambda expression, use a def
+    E731,
     # W503: line break before binary operator
     W503,
     # W504: line break after binary operator
@@ -25,4 +29,5 @@ exclude =
     #
     .eggs,
     build,
-    sphinxext,
+    _build,
+    docs/tephi/src/sphinxext/*,

@@ -1,8 +1,3 @@
-.. tephi documentation master file, created by
-   sphinx-quickstart on Thu Jun 26 15:24:09 2014.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
-
 The tephi user guide
 ====================
 
@@ -15,11 +10,21 @@ User guide table of contents
 ----------------------------
 
 .. toctree::
-   :maxdepth: 3
-   :numbered: 
+   :maxdepth: 1
+   :caption: User Guide
+   :name: userguide_index
+   :hidden:
 
    introduction.rst
    plotting.rst
    customise.rst
    barbs.rst
    glossary.rst
+
+
+.. toctree::
+   :maxdepth: 1
+   :caption: Reference
+   :hidden:
+
+   generated/api/tephi

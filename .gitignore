@@ -60,3 +60,8 @@ docs/_build/
 
 # misc
 *.lock
+
+# Auto generated documentation files
+docs/tephi/src/_build/*
+docs/tephi/src/generated
+

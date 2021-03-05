@@ -47,5 +47,3 @@
 
 <br>
 
-© British Crown Copyright 2014-2020, Met Office
-

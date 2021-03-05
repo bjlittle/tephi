@@ -253,18 +253,28 @@ def loadtxt(*filenames, **kwargs):
     return data
 
 
-class _FormatterTheta:
-    """Dry adiabats potential temperature axis tick formatter."""
+class FormatterDryAdiabat:
+    """
+    Dry adiabats potential temperature axis tick formatter.
+
+    See :class:`mpl_toolkits.axisartist.grid_finder.FormatterPrettyPrint`.
+
+    """
 
     def __call__(self, direction, factor, values):
-        return [r"$\theta={:.1f}$".format(value) for value in values]
+        return [r"$\theta={}$".format(int(value)) for value in values]
 
 
-class _FormatterIsotherm:
-    """Isotherms temperature axis tick formatter."""
+class FormatterIsotherm:
+    """
+    Isotherms temperature axis tick formatter.
+
+    See :class:`mpl_toolkits.axisartist.grid_finder.FormatterPrettyPrint`.
+
+    """
 
     def __call__(self, direction, factor, values):
-        return [r"  $T={:.1f}$".format(value) for value in values]
+        return [r"  $T={}$".format(int(value)) for value in values]
 
 
 class Locator:
@@ -296,10 +306,8 @@ class Locator:
     def __call__(self, start, stop):
         """Calculate the axis ticks given the provided tick range."""
 
-        step = self.step
-        start = (int(start) / step) * step
-        stop = (int(stop) / step) * step
-        ticks = np.arange(start, stop + step, step)
+        start, stop = np.rint([start, stop])
+        ticks = np.arange(start, stop + self.step, self.step)
 
         return ticks, len(ticks), 1
 
@@ -581,6 +589,8 @@ class Tephigram:
         isotherm_locator=None,
         dry_adiabat_locator=None,
         anchor=None,
+        isotherm_formatter=None,
+        dry_adiabat_formatter=None,
     ):
         """
         Initialise the tephigram transformation and plot axes.
@@ -602,6 +612,12 @@ class Tephigram:
             of the tephigram plot in terms of the bottom left hand corner and
             the top right hand corner. Pressure data points must be in units of
             mb or hPa, and temperature data points must be in units of degC.
+        * isotherm_formatter:
+            The isotherm axis tick formatter class.
+            Default is :class:`FormatterIsotherm`.
+        * dry_adiabat_formatter:
+            The dry adiabat axis tick formatter class.
+            Default is :class:`FormatterDryAdiabat`.
 
         For example:
 
@@ -648,13 +664,20 @@ class Tephigram:
         else:
             locator_theta = dry_adiabat_locator
 
+        # Configure the formatters.
+        if isotherm_formatter is None:
+            isotherm_formatter = FormatterIsotherm
+
+        if dry_adiabat_formatter is None:
+            dry_adiabat_formatter = FormatterDryAdiabat
+
         # Define the tephigram coordinate-system transformation.
         self.tephi_transform = transforms.TephiTransform()
         ghelper = GridHelperCurveLinear(
             self.tephi_transform,
-            tick_formatter1=_FormatterIsotherm(),
+            tick_formatter1=isotherm_formatter(),
             grid_locator1=locator_isotherm,
-            tick_formatter2=_FormatterTheta(),
+            tick_formatter2=dry_adiabat_formatter(),
             grid_locator2=locator_theta,
         )
         self.axes = Subplot(self.figure, 1, 1, 1, grid_helper=ghelper)
